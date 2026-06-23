@@ -1,7 +1,7 @@
 # Build Your Own ChatGPT From Scratch
 
-SOC (Seasons of Code) 2025 — IIT Bombay
-Mid-Term Submission | Mentee: [Your Name] | Roll No: [XXXXXX]
+Season of Code 2026 — IIT Bombay
+Mid-Term Submission | Mentee: Annu Kumari| Roll No: 25B0728 | Mentor:Nihar
 
 ---
 
