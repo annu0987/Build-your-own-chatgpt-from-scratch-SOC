@@ -1,13 +1,13 @@
 # Build Your Own ChatGPT From Scratch
 
-Season of Code 2026 — IIT Bombay
+Season of Code 2026
 Mid-Term Submission | Mentee: Annu Kumari| Roll No: 25B0728 | Mentor:Nihar
 
 ---
 
 ## What is this project?
 
-This project is part of the SoC program where we're trying to build a GPT-style language model completely from scratch — no using Hugging Face or pre-built transformer libraries. The goal is to understand what's actually happening inside ChatGPT, not just use it.
+This project is part of the SoC program where we're trying to build a GPT-style language model completely from scratch - no using Hugging Face or pre-built transformer libraries. The goal is to understand what's actually happening inside ChatGPT, not just use it.
 
 We're following the resources given by the mentors and also using Andrej Karpathy's "Let's build GPT" video as the main reference for the final implementation.
 
@@ -15,7 +15,7 @@ We're following the resources given by the mentors and also using Andrej Karpath
 
 ## Week-wise Progress
 
-### Week 1 — Python + Data Science Basics
+### Week 1 - Python + Data Science Basics
 - Revised Python (numpy, pandas, matplotlib)
 - Understood how to work with arrays and do basic data manipulation
 - This week was more of a warmup honestly
@@ -30,7 +30,7 @@ We're following the resources given by the mentors and also using Andrej Karpath
 - Finished remaining StatQuest videos (80–84)
 - Started reading about what transformers are — watched 3b1b's attention video
 - Learned what embeddings are and why we need them for text
-- Tried to understand the "Attention is All You Need" paper — honestly understood maybe 40% of it
+- Tried to understand the "Attention is All You Need" paper - honestly understood maybe 40% of it
 
 ### Week 4 — PyTorch + Tokenization + Starting the Model
 - Started learning PyTorch basics
