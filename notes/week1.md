@@ -1,56 +1,40 @@
-# Week 1 Notes — Intro + DS Tools
+# Week 1 Notes - Python and DS Tools
 
-## What we did
+## What this week was about
 
-Mostly revision of Python and learning numpy/pandas/matplotlib. This week was kind of a foundation week before getting into the actual ML stuff.
+The first week was mostly setup. Python refresher, numpy, pandas, matplotlib. I already knew basic Python so the refresher video was mostly background noise, but I watched it at 1.5x just to make sure I wasn't missing anything.
 
-## Numpy stuff I learned
+---
 
-- Arrays are way faster than Python lists because they use contiguous memory
-- Broadcasting — numpy can do operations on arrays of different shapes automatically
-  - e.g. `np.array([1,2,3]) + 5` works fine, adds 5 to each element
-- Useful functions: `np.dot`, `np.reshape`, `np.zeros`, `np.random.randn`
+## NumPy
 
-```python
-import numpy as np
+The main thing I took away is that numpy lets you do math on entire arrays without writing loops. Like if you have an array of numbers and you want to multiply each one by 2, you just write `arr * 2` and it works. This is called vectorization I think.
 
-# dot product — used a lot in neural networks
-a = np.array([1, 2, 3])
-b = np.array([4, 5, 6])
-print(np.dot(a, b))  # 32
+Broadcasting was the confusing part. When you add a (3, 1) array and a (1, 4) array, numpy figures out how to stretch them to match. It works but I had to read about it twice before it clicked.
 
-# matrix multiply
-A = np.random.randn(3, 4)
-B = np.random.randn(4, 2)
-print(np.matmul(A, B).shape)  # (3, 2)
-```
+Useful things I noted:
+- `np.zeros`, `np.ones`, `np.random.randn` for creating arrays
+- Slicing works like Python lists but in multiple dimensions
+- `arr.shape` and `arr.reshape()` come up constantly
 
-## What are LLMs?
+---
 
-LLMs = Large Language Models. The basic idea is:
+## Pandas
 
-- You give the model some text (a "prompt")
-- The model predicts what word/token should come next
-- Then it takes that output, adds it to the input, and predicts the next one
-- Repeat this many times → you get generated text
+Pandas is basically spreadsheets in Python. A DataFrame is rows and columns, similar to Excel. I mostly used it to load CSVs and check what the data looks like.
 
-This is called **autoregressive generation**. The model is basically always doing "given everything before this, what comes next?"
+`df.head()`, `df.info()`, `df.describe()` - these three together tell you a lot about a dataset quickly.
 
-## Next Token Prediction
+---
 
-This is the core task that GPT-style models are trained on.
+## Matplotlib
 
-Example:
-- Input: `"The cat sat on the"`
-- Model predicts: `"mat"` (or `"floor"` or `"roof"` — gives probabilities for all words)
+Didn't spend too long here. Enough to plot a line chart and a histogram. The syntax is a bit weird (`plt.subplot` and figuring out axes) but once you get the pattern it's fine.
 
-The model outputs a probability distribution over the entire vocabulary. During training, we want the probability of the correct next word to be high. We push it in that direction using gradient descent.
+---
 
-Key insight: if you train a model on enough text with just this simple task (predict next word), it somehow learns grammar, facts, reasoning, etc. Nobody fully understands why this works as well as it does.
+## Personal observations
 
-## Things I'm still confused about
+One thing I noticed is that a lot of the "real" ML work is just moving data around in the right shape. Like half the errors I got while experimenting were shape mismatches between arrays. So numpy basics actually matter more than they look like they do.
 
-- Why does predicting the next token lead to "understanding"? Like how does autocomplete become ChatGPT?
-- How does the model decide what context from earlier in the sentence is relevant?
-
-Will probably understand this better once we get to transformers.
+Also I realized I didn't really know what a matrix multiplication was doing geometrically until I looked it up separately. The videos don't explain that but it helped to think of it as a transformation.
