@@ -1,81 +1,66 @@
-# Week 2 Notes — Tokenization and Embeddings
+# Week 2 Notes - Neural Networks, Tokenization, Embeddings
+
+## Neural Networks (beginning)
+
+Started the StatQuest neural network playlist from video 74. Josh Starmer explains things simply which helped. The core idea is:
+
+- You have inputs
+- They pass through layers with weights
+- Each layer applies some transformation
+- At the end you get a prediction
+- You compare that to the actual answer and get a loss
+- You adjust weights to reduce loss
+
+Gradient descent is the process of adjusting weights. The gradient tells you which direction to move in to reduce the loss. You move a small amount (learning rate) each step.
+
+Backpropagation is how you compute those gradients. The chain rule from calculus lets you trace back through each layer and figure out how much each weight contributed to the error. The math makes sense on paper but I still find it hard to track mentally when there are many layers.
+
+---
 
 ## Tokenization
 
-Before a model can process text, we have to convert it into numbers. That's what tokenization does.
+Before text goes into a model it needs to be turned into numbers. Tokenization is that step.
 
-There are different ways to tokenize:
+The simplest version: split the text into words and assign each word an integer.
 
-### Character-level tokenization
-- Split text into individual characters
-- Vocabulary is small (like 70-100 characters)
-- Simple to implement
-- Problem: sequences get very long, model has to learn to combine characters into words
-
-### Word-level tokenization
-- Split on spaces basically
-- Vocabulary gets huge (100k+ words)
-- Doesn't handle unknown words well ("ChatGPT" wouldn't be in a vocabulary from 2015)
-
-### Subword tokenization (what GPT actually uses)
-- Something in between — breaks words into common subword pieces
-- e.g. "unbelievable" → ["un", "believ", "able"]
-- GPT uses BPE (Byte Pair Encoding) — merges the most common pairs of characters/tokens repeatedly
-- We're not implementing BPE from scratch right now, just doing character-level for simplicity
-
-## My character tokenizer (simplified version)
-
-```python
-text = "hello world"
-chars = sorted(set(text))          # unique characters
-char_to_int = {c: i for i, c in enumerate(chars)}
-int_to_char = {i: c for i, c in enumerate(chars)}
-
-# encode
-encoded = [char_to_int[c] for c in text]
-print(encoded)
-
-# decode
-decoded = ''.join([int_to_char[i] for i in encoded])
-print(decoded)  # should give back "hello world"
 ```
+"the cat sat" -> [4, 12, 7]
+```
+
+But real tokenizers don't just split on spaces. They split into subword pieces. So "playing" might become ["play", "##ing"] or something like that. This helps with rare words.
+
+Example with character-level tokenization:
+```
+text = "hello"
+chars = sorted(set(text))       # ['e', 'h', 'l', 'o']
+stoi = {c: i for i, c in enumerate(chars)}
+encoded = [stoi[c] for c in text]
+# encoded = [1, 0, 2, 2, 3]
+```
+
+The vocab size matters. Bigger vocab = fewer tokens per sentence but more memory for the embedding table.
+
+---
 
 ## Embeddings
 
-After tokenizing, we have integer IDs. But these integers don't carry any meaning by themselves — the number 42 doesn't mean anything more than the number 7.
+Once you have token IDs you still need to represent them as vectors, because the model works with vectors not integers. An embedding table is just a lookup: token ID 4 -> some vector of floats.
 
-So we use **embeddings**: each token ID gets mapped to a dense vector of real numbers (e.g. 64 or 128 dimensions).
+```
+vocab_size = 100
+embed_dim = 16
+table = np.random.randn(vocab_size, embed_dim)
 
-These vectors are learned during training. Similar words end up with similar vectors.
-
-Example: after training on enough text, the vectors for "king" and "queen" will be closer together than "king" and "banana".
-
-In PyTorch:
-```python
-import torch
-import torch.nn as nn
-
-vocab_size = 65    # number of unique tokens
-embed_dim = 32     # how many dimensions per token
-
-embedding = nn.Embedding(vocab_size, embed_dim)
-
-# convert a token ID to a vector
-token_id = torch.tensor([5])
-vector = embedding(token_id)
-print(vector.shape)  # (1, 32)
+token_id = 4
+embedding = table[token_id]   # shape: (16,)
 ```
 
-## Positional Encoding
+The embedding starts random. During training it gets adjusted so tokens with similar meaning end up with similar vectors. At least that's the idea. I haven't actually seen it happen yet because I haven't trained anything.
 
-One problem: embeddings don't tell the model where in the sequence a token appears. "cat sat on mat" and "mat on sat cat" have the same tokens, just different order.
+One thing that surprised me: the embedding dimension is something you choose. It's a hyperparameter. 16, 64, 512 -- the bigger it is the more information can be packed in but also more computation.
 
-To fix this, we add **positional encodings** — vectors that encode position — to the token embeddings.
+---
 
-The original paper used sine/cosine functions for this. In simpler implementations, we just learn a separate embedding for each position (works fine for shorter sequences).
+## What I'm still fuzzy on
 
-## Summary
-
-text → tokenize → integer IDs → embedding lookup → vectors → feed to model
-
-This pipeline is the entry point for the entire transformer.
+Why do embeddings "learn" to be meaningful? I get that the loss propagates back through them, but it's not obvious to me why similar words end up close together. I think it has to do with context but I need to look into this more.
